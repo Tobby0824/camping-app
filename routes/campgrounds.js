@@ -61,18 +61,16 @@ router.get("/:id", function(req, res){
     });
 });
 
-
-router.get("/:id/edit", middleware.checkUserCampground, function(req, res){
-    console.log("IN EDIT!");
-    //find the campground with provided ID
+// EDIT CAMPGROUND ROUTE
+router.get("/:id/edit", middleware.checkCampgroundOwnership, function(req, res){
     Campground.findById(req.params.id, function(err, foundCampground){
-        if(err || !foundCampground) {
-            req.flash("error", "Campground not found");
-            return res.redirect("back");
+        if(err || !foundCampground){
+            console.log(err);
+            req.flash("error","Campground not found");
+            res.redirect("back");
+        } else {
+            res.render("campgrounds/edit", {campground: foundCampground});
         }
-        
-        //render show template with that campground
-        res.render("campgrounds/edit", {campground: foundCampground});
     });
 });
 
